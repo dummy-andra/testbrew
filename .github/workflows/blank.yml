@@ -39,8 +39,8 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
       - run: brew test-bot --only-tap-syntax
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+#         env:
+#           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
 
       - run: |
