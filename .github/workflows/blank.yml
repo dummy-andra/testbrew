@@ -1,8 +1,13 @@
 name: brew test-bot
 on:
   push:
-    branches: master
+    branches:
+      - main
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - edited
 jobs:
   test-bot:
     runs-on: ${{ matrix.os }}
