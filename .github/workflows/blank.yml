@@ -28,9 +28,9 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
-      - name: Install Homebrew Bundler RubyGems
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: brew install-bundler-gems
+#       - name: Install Homebrew Bundler RubyGems
+#         if: steps.cache.outputs.cache-hit != 'true'
+#         run: brew install-bundler-gems
 
 #       - run: brew test-bot --only-cleanup-before
 
@@ -52,10 +52,13 @@ jobs:
 #           git ls-remote 'https://github.com/dummy-andra/getargv.git'
 #           git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
 
-      - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
+      - name: Brew Test-Bot (Debug)
+        run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
         if: github.event_name == 'pull_request'
         env:
+          ACTIONS_STEP_DEBUG: true
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+
 
       - name: Upload bottles as an artifact
         if: github.event_name == 'pull_request'
