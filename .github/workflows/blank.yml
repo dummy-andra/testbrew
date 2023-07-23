@@ -52,23 +52,22 @@ jobs:
           git ls-remote 'https://github.com/dummy-andra/getargv.git'
           git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
 
-      - name: Brew Test-Bot (Debug)
-        run: brew test-bot  --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
+      - name: Run brew test-bot --only-formulae --root-url=
+        run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
         # if: github.event_name == 'pull_request'
         env:
           ACTIONS_STEP_DEBUG: true
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-
       - name: Upload bottles as an artifact
-        if: github.event_name == 'pull_request'
+        # if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v2
         with:
           name: bottles
           path: '*.bottle.*'
 
       - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+        # if: github.event_name == 'pull_request'
         with:
           script: |
             github.rest.issues.addLabels({
