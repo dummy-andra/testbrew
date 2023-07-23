@@ -67,7 +67,7 @@ jobs:
           path: '*.bottle.*'
 
       - uses: actions/github-script@v6
-        # if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request'
         with:
           script: |
             github.rest.issues.addLabels({
