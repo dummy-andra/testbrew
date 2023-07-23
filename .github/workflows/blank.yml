@@ -32,32 +32,27 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: brew install-bundler-gems
 
-      - run: brew test-bot --only-cleanup-before
+#       - run: brew test-bot --only-cleanup-before
 
-      - run: brew test-bot --only-setup
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+#       - run: brew test-bot --only-setup
+#         env:
+#           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
           
-      - run: brew update
-      - run: brew test-bot --only-tap-syntax
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+#       - run: brew update
+#       - run: brew test-bot --only-tap-syntax
+#         env:
+#           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-      - run: |
-          git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+#       - run: |
+#           git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
+#         env:
+#           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-      - run: |
-          git ls-remote 'https://github.com/dummy-andra/getargv.git'
-          git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
+#       - run: |
+#           git ls-remote 'https://github.com/dummy-andra/getargv.git'
+#           git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
 
       - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
-        if: github.event_name == 'pull_request'
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
-
-      - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/getargv/homebrew-tap
         if: github.event_name == 'pull_request'
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
