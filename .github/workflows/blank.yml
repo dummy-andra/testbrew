@@ -1,3 +1,4 @@
+# check for updates at: https://github.com/Homebrew/brew/blob/master/Library/Homebrew/dev-cmd/tap-new.rb
 name: brew test-bot
 on:
   push:
@@ -10,10 +11,7 @@ on:
       - edited
 jobs:
   test-bot:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
+    runs-on: macos-13
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -24,7 +22,7 @@ jobs:
 
       - name: Cache Homebrew Bundler RubyGems
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -41,6 +39,7 @@ jobs:
       - run: brew test-bot --only-tap-syntax
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+
 
       - run: |
           git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
