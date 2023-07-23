@@ -53,7 +53,7 @@ jobs:
 #           git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
 
       - name: Brew Test-Bot (Debug)
-        run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
+        run: brew test-bot --fail-fast --only-formulae --only-json-tab --skip-online-checks --skip-dependents --publish --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap  && echo "IT WORKED!" || echo "IT FAILED ($?)!"
         if: github.event_name == 'pull_request'
         env:
           ACTIONS_STEP_DEBUG: true
