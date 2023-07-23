@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-#   pull_request:
-#     types:
-#       - opened
-#       - synchronize
-#       - edited
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - edited
 jobs:
   test-bot:
     runs-on: macos-13
@@ -29,7 +29,7 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: Install Homebrew Bundler RubyGems
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         run: brew install-bundler-gems
 
       - run: brew test-bot --only-cleanup-before
@@ -54,7 +54,7 @@ jobs:
 
       - name: Brew Test-Bot (Debug)
         run: brew test-bot  --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
-        #if: github.event_name == 'pull_request'
+        # if: github.event_name == 'pull_request'
         env:
           ACTIONS_STEP_DEBUG: true
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
