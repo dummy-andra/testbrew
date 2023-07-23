@@ -28,32 +28,32 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
-#       - name: Install Homebrew Bundler RubyGems
-#         if: steps.cache.outputs.cache-hit != 'true'
-#         run: brew install-bundler-gems
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
 
-#       - run: brew test-bot --only-cleanup-before
+      - run: brew test-bot --only-cleanup-before
 
-#       - run: brew test-bot --only-setup
+      - run: brew test-bot --only-setup
 #         env:
 #           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
           
-#       - run: brew update
-#       - run: brew test-bot --only-tap-syntax
+      - run: brew update
+      - run: brew test-bot --only-tap-syntax
 #         env:
 #           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-#       - run: |
-#           git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
-#         env:
-#           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+      - run: |
+          git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-#       - run: |
-#           git ls-remote 'https://github.com/dummy-andra/getargv.git'
-#           git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
+      - run: |
+          git ls-remote 'https://github.com/dummy-andra/getargv.git'
+          git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
 
       - name: Brew Test-Bot (Debug)
-        run: brew test-bot --fail-fast --only-formulae --only-json-tab --skip-online-checks --skip-dependents --publish --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap  && echo "IT WORKED!" || echo "IT FAILED ($?)!"
+        run: brew test-bot  --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
         if: github.event_name == 'pull_request'
         env:
           ACTIONS_STEP_DEBUG: true
