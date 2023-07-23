@@ -18,10 +18,13 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+        with:
+          token: ${{ secrets.GH_PAT }}
+          debug: true
 
       - name: Cache Homebrew Bundler RubyGems
         id: cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
@@ -36,6 +39,37 @@ jobs:
       - run: brew test-bot --only-setup
 
       - run: brew test-bot --only-tap-syntax
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
 
-      - run: brew test-bot --only-formulae
+      - run: |
+          git config --global http.extraheader "Authorization: Basic $(echo -n "x-access-token:${{ secrets.GH_PAT }}" | base64 | tr -d '\n')"
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+
+      - run: |
+          git ls-remote 'https://github.com/dummy-andra/getargv.git'
+          git ls-remote 'https://github.com/dummy-andra/homebrew-tap.git'
+
+      - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/dummy-andra/homebrew-tap
         if: github.event_name == 'pull_request'
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_PAT }}
+
+      - name: Upload bottles as an artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v2
+        with:
+          name: bottles
+          path: '*.bottle.*'
+
+      - uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["pr-pull"]
+            })
